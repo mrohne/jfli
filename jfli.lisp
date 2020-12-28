@@ -13,20 +13,15 @@
 (defpackage :jfli
   (:use :common-lisp :java)
   (:export
-
-   :enable-java-proxies
-
    ;wrapper generation
    :def-java-class
    :get-jar-classnames
    :dump-wrapper-defs-to-file
-
    ;object creation etc
    :find-java-class
    :new
    :make-new
    :jeq
-
    ;array support
    :make-new-array
    :jlength
@@ -39,20 +34,13 @@
    :jref-int
    :jref-short
    :jref-long
-
    ;proxy support
    :new-proxy
    :unregister-proxy
-
+   :enable-java-proxies
    ))
 
 (in-package :jfli)
-
-#+ignore
-(eval-when (:compile-toplevel :load-toplevel :execute)
-  (defconstant +null+ (make-immediate-object nil :ref))
-  (defconstant +false+ (make-immediate-object nil :boolean))
-  (defconstant +true+ (make-immediate-object t :boolean)))
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (defun string-append (&rest strings)
@@ -144,9 +132,8 @@ Will also convert strings for use as objects"
   (typecase x
     (java-ref x)
     (string (convert-to-java-string x))
-    (null nil)
+    (null +null+)
     ((or number character) x)
-    ;; avodonosov: otherwise clause
     (otherwise x)))
 
 (defun is-same-object (obj1 obj2)
